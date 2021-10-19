@@ -4,15 +4,16 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static('./public'));
+
+app.set('views', './views');
+app.set('view engine', 'ejs');
 
 const port = 8000;
 
 app.get('/about/:service/:date', function(req, res){
-
-    console.log(req.params);
-
     console.log('Request made to /about');
-    res.send('This is an express course');
+    res.render('about', { service: req.params.service, date: req.params.date });
 })
 
 app.get('/contact', function(req, res){
@@ -22,7 +23,7 @@ app.get('/contact', function(req, res){
 
 app.get('/', function(req, res){
     console.log('Request made to root path');
-    res.send('Hello! Welcome to my site! Yay!!!')
+    res.render('welcome');
 })
 
 // route parameter
