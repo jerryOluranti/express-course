@@ -1,5 +1,5 @@
 const express = require('express');
-const multer =require('multer');
+const multer = require('multer');
 
 const app = express();
 
@@ -10,7 +10,6 @@ app.use(express.static('./public'));
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
-//Configuration for Multer
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./public/upload");
@@ -25,83 +24,95 @@ const upload = multer({
   storage: multerStorage,
 });
 
-const port = 8000;
 
-app.get('/about/:service/:date', function(req, res){
-    console.log('Request made to /about');
-    res.render('about', { service: req.params.service, date: req.params.date });
-})
+app.get('/', (req, res) => {
+    console.log(`${req.method} request made to /`)
 
-app.get('/register', function(req, res){
-    console.log('Request made to /register');
-    res.render('register');
-})
+    res.render('welcome');    
 
-app.get('/contact', function(req, res){
-    console.log('Request made to /contact');
-    res.send('Subscribe to codemania!')
-})
-
-app.get('/', function(req, res){
-    console.log('Request made to root path');
-    res.render('welcome');
-})
-
-// route parameter
-// app.get('/:username', function(req, res){
-    
-//     const route_user = req.params.username;
-//     console.log(req.params);
-
-//     console.log(`Request made to root path by ${route_user}`);
-//     res.send(`Hello ${route_user}! Welcome to my site! Yay!!!`)
-// })
-
-// Post Request
-app.post('/signup', function(req, res) {
-    console.log('Post request made!');
-    console.log(req.body.username);
-    res.json({ name: req.body.name })
-    res.end();
-})
-
-app.post('/register', upload.single('avatar'), function(req, res) {
-    console.log(req.file);
-
-    // if (req.body.username === "Jerry"){
-    //     res.send("Login Successfull!");
-    // }else{
-    //     res.send('invalid username!')
+    // if (req.query.privilege === 'admin'){
+    //     res.send(
+    //        `Admin Dashboard: Name: ${req.query.name} --- Id: ${req.query.user_id}`
+    //     );
+    //     res.end();
     // }
 
-    res.send('Upload successfull!')
-
+    // if (req.query.privilege === 'user'){
+    //      res.send(
+    //        `Welcome to our website\nUser Dashboard: Name: ${req.query.name} --- Id: ${req.query.user_id}`
+    //      );
+    //      res.end();
+    // }
 })
 
-// Delete request
-app.delete('/delete-user', function(req, res) {
-    console.log('Delete request made to the server!');
-    console.log(req.body);
-    res.send('Delete successfull!')
-    res.end();
+app.get('/about/:service/:date', (req, res) => {
+    console.log(`request made to ${req.url}`)
+    res.render('about', { service: req.params.service, date: req.params.date })
 })
 
-// Put request
-app.put('/put-user', function(req, res) {
-     console.log("Put request made to the server!");
-     console.log(req.body);
-     res.send("Put successfull!");
-     res.end();
+app.get('/register', (req, res) => {
+     console.log(`request made to ${req.url}`);
+     res.render("register");
 })
 
-// Put request
-app.patch('/patch-user', function(req, res) {
-     console.log("patch request made to the server!");
-     console.log(req.body);
-     res.send("patch successfull!");
-     res.end();
+app.post('/register', upload.single('avatar'), (req, res) => {
+      console.log(`${req.method} request made to ${req.url}`);
+      console.log(req.file);
+      res.end();
 })
 
-app.listen(port, function(){ 
-    console.log(`Server listening on port ${port}`)
-});
+// app.get('/services', (req, res) => {
+//     console.log(`request made to ${req.url}`)
+//     res.send('These are our services!')
+// })
+
+
+// app.get('/videos/:video_id/:video_name', (req, res) => {
+//     console.log(`request made to ${req.url}`)
+//     res.send(`Video requested with id: ${req.params.video_id} and name: ${req.params.video_name}`)
+// })
+
+// app.get('/profile/:username/:email/:password', (req, res) => {
+//     console.log(`request made to ${req.url}`);
+//     res.send(`Welcome ${req.params.username}, your email is: ${req.params.email} and your password is: ${req.params.password}`)
+// })
+
+// app.post('/signin', (req, res) => {
+//     console.log(`${req.method} request made to ${req.url}`);
+
+//     console.log(req.body.username);
+
+//     res.send('Signin successfull!');
+//     res.end();
+// })
+
+// app.put('/insert-record', (req, res) => {
+//     console.log(`${req.method} request made to ${req.url}`);
+
+//     console.log(req.body)
+
+//     res.send("Record Inserted successfully!");
+//     res.end();
+// })
+
+// app.patch('/update-record', (req, res) => {
+//     console.log(`${req.method} request made to ${req.url}`);
+
+//     console.log(req.body);
+
+//     res.send("Record Updated successfully!");
+//     res.end();
+// })
+
+// app.delete('/delete-record', (req, res) => {
+//     console.log(`${req.method} request made to ${req.url}`);
+
+//     console.log(req.body);
+
+//     res.send("Record Deleted successfully!");
+//     res.end();
+// })
+
+app.listen(8000, function (){
+    console.log('server running!')
+})
